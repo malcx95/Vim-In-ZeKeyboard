@@ -6,9 +6,9 @@ endif
 
 let g:loaded_zekeyboard = 1
     
-function! ModeChanged()
-    
-    silent! execute "! echo " . mode() . " > hello.txt"
+function! VisualEntered()
+    set updatetime=0
+    silent! execute "! echo v > hello.txt"
 
 endfunction
 
@@ -18,9 +18,15 @@ function! InsertEntered(mode)
 
 endfunction
 
-vnoremap <silent> <expr> <SID>ModeChanged ModeChanged()
-nnoremap <silent> <script> v v<SID>ModeChanged
-nnoremap <silent> <script> V V<SID>ModeChanged
+function! Reset()
+    set updatetime=4000
+    silent! execute "! echo " . mode() . " > hello.txt"
+
+endfunction
+
+"vnoremap <silent> <expr> <SID>VisualEntered VisualEntered()
+nnoremap <silent> <script> v v<SID>VisualEntered
+nnoremap <silent> <script> V V<SID>VisualEntered
 "nnoremap <silent> <script> a a<SID>ModeChanged
 "nnoremap <silent> <script> A A<SID>ModeChanged
 "nnoremap <silent> <script> i i<SID>ModeChanged
@@ -29,9 +35,13 @@ nnoremap <silent> <script> V V<SID>ModeChanged
 "nnoremap <silent> <script> O O<SID>ModeChanged
 "nnoremap <silent> <script> s s<SID>ModeChanged
 "nnoremap <silent> <script> S S<SID>ModeChanged
-"nnoremap <silent> <script> <C-v> <C-v><SID>ModeChanged
+nnoremap <silent> <script> <C-v> <C-v><SID>VisualEntered
 
 
-autocmd InsertEnter * call InsertEntered(v:insertmode)
-autocmd InsertLeave * call ModeChanged()
-autocmd CursorHold * call ModeChanged()
+augroup GROUP
+    autocmd!
+    autocmd InsertEnter * call InsertEntered(v:insertmode)
+    autocmd InsertLeave * call Reset()
+    autocmd CursorHold * call Reset()
+augroup end
+
