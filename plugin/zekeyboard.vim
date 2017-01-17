@@ -9,34 +9,37 @@ if !has('python')
 endif
 
 let g:loaded_zekeyboard = 1
-    
+
+let g:keyboard_file = "hello.txt"
+
 function! VisualEntered()
     set updatetime=0
 python << endpython
 import os
-os.system("echo v > hello.txt")
+import vim
+os.system("echo v > " + vim.eval("g:keyboard_file"))
 
 endpython
 
+    return ''
 endfunction
 
 function! InsertEntered(mode)
     
-    silent! execute "! echo " . a:mode . " > hello.txt"
+    silent! execute "! echo " . a:mode . " > " . g:keyboard_file
 
 endfunction
 
 function! Reset()
     set updatetime=4000
-    silent! execute "! echo " . mode() . " > hello.txt"
+    silent! execute "! echo " . mode() . " > " . g:keyboard_file
 
 endfunction
 
 vnoremap <silent> <expr> <SID>VisualEntered VisualEntered()
-nnoremap <silent> <script> v v<SID>VisualEntered
-nnoremap <silent> <script> V V<SID>VisualEntered
-nnoremap <silent> <script> <C-v> <C-v><SID>VisualEntered
-
+nnoremap <silent> <script> v v<SID>VisualEntered<left><right>
+nnoremap <silent> <script> V V<SID>VisualEntered<left><right>
+nnoremap <silent> <script> <C-v> <C-v><SID>VisualEntered<left><right>
 
 augroup GROUP
     autocmd!
