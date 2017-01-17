@@ -4,11 +4,19 @@ if exists("g:loaded_zekeyboard")
     finish
 endif
 
+if !has('python')
+    finish
+endif
+
 let g:loaded_zekeyboard = 1
     
 function! VisualEntered()
     set updatetime=0
-    silent! execute "! echo v > hello.txt"
+python << endpython
+import os
+os.system("echo v > hello.txt")
+
+endpython
 
 endfunction
 
@@ -24,17 +32,9 @@ function! Reset()
 
 endfunction
 
-"vnoremap <silent> <expr> <SID>VisualEntered VisualEntered()
+vnoremap <silent> <expr> <SID>VisualEntered VisualEntered()
 nnoremap <silent> <script> v v<SID>VisualEntered
 nnoremap <silent> <script> V V<SID>VisualEntered
-"nnoremap <silent> <script> a a<SID>ModeChanged
-"nnoremap <silent> <script> A A<SID>ModeChanged
-"nnoremap <silent> <script> i i<SID>ModeChanged
-"nnoremap <silent> <script> I I<SID>ModeChanged
-"nnoremap <silent> <script> o o<SID>ModeChanged
-"nnoremap <silent> <script> O O<SID>ModeChanged
-"nnoremap <silent> <script> s s<SID>ModeChanged
-"nnoremap <silent> <script> S S<SID>ModeChanged
 nnoremap <silent> <script> <C-v> <C-v><SID>VisualEntered
 
 
