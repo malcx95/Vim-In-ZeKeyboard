@@ -6,12 +6,13 @@ endif
 
 let g:loaded_zekeyboard = 1
 
+
 let c = 0
 
-while 1
-    let c += 1
-    ! "echo hello" . c . " > hello"
-    sleep 1000m
+
+let c += 1
+sleep 1000m
+
+silent! execute '! echo hello' . c . " > hello.txt"
     
-endwhile
 
