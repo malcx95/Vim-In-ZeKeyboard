@@ -8,14 +8,17 @@ if !has('python')
     finish
 endif
 
+let s:saved_cpo = &cpo
+set cpo&vim
+
 let g:loaded_zekeyboard = 1
 
-let g:keyboard_file = "hello.txt"
+let g:keyboard_file = "/dev/ttyACM0"
 
 function! VisualEntered()
     set updatetime=0
 python << endpython
-import os
+
 import vim
 os.system("echo v > " + vim.eval("g:keyboard_file"))
 
@@ -26,13 +29,23 @@ endfunction
 
 function! InsertEntered(mode)
     
-    silent! execute "! echo " . a:mode . " > " . g:keyboard_file
+python << endpython
+import vim
+os.system("echo " + vim.eval("a:mode") + " > " + vim.eval("g:keyboard_file"))
+
+endpython
 
 endfunction
 
 function! Reset()
     set updatetime=4000
-    silent! execute "! echo " . mode() . " > " . g:keyboard_file
+
+python << endpython
+
+import vim
+os.system("echo " + vim.eval("mode()") + " > " + vim.eval("g:keyboard_file"))
+
+endpython
 
 endfunction
 
@@ -47,4 +60,7 @@ augroup GROUP
     autocmd InsertLeave * call Reset()
     autocmd CursorHold * call Reset()
 augroup end
+
+let &cpo = s:saved_cpo
+unlet! s:saved_cpo
 
