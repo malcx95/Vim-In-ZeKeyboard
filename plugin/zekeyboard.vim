@@ -20,7 +20,10 @@ function! VisualEntered()
 python << endpython
 
 import vim
-os.system("echo v > " + vim.eval("g:keyboard_file"))
+import os
+keyboard = vim.eval("g:keyboard_file")
+if os.path.isfile(keyboard):
+    os.system("echo v > " + keyboard)
 
 endpython
 
@@ -30,8 +33,12 @@ endfunction
 function! InsertEntered(mode)
     
 python << endpython
+
 import vim
-os.system("echo " + vim.eval("a:mode") + " > " + vim.eval("g:keyboard_file"))
+import os
+keyboard = vim.eval("g:keyboard_file")
+if os.path.isfile(keyboard):
+    os.system("echo " + vim.eval("a:mode") + " > " + keyboard)
 
 endpython
 
@@ -43,7 +50,10 @@ function! Reset()
 python << endpython
 
 import vim
-os.system("echo " + vim.eval("mode()") + " > " + vim.eval("g:keyboard_file"))
+import os
+keyboard = vim.eval("g:keyboard_file")
+if os.path.isfile(keyboard):
+    os.system("echo " + vim.eval("mode()") + " > " + keyboard)
 
 endpython
 
