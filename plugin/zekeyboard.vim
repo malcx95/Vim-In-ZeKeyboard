@@ -15,47 +15,42 @@ let g:loaded_zekeyboard = 1
 
 let g:keyboard_file = "/dev/ttyACM0"
 
-function! VisualEntered()
-    set updatetime=0
+function! SendToKeyboard(text)
 python << endpython
 
 import vim
 import os
 keyboard = vim.eval("g:keyboard_file")
-if os.path.isfile(keyboard):
-    os.system("echo v > " + keyboard)
+text = vim.eval("a:text")
+
+try:
+    with open(keyboard, 'w') as k:
+        k.write(text)
+except IOError, OSError:
+    pass
 
 endpython
+
+endfunction
+
+function! VisualEntered()
+    set updatetime=0
+
+    call SendToKeyboard("v")
 
     return ''
 endfunction
 
 function! InsertEntered(mode)
     
-python << endpython
-
-import vim
-import os
-keyboard = vim.eval("g:keyboard_file")
-if os.path.isfile(keyboard):
-    os.system("echo " + vim.eval("a:mode") + " > " + keyboard)
-
-endpython
+    call SendToKeyboard(a:mode)
 
 endfunction
 
 function! Reset()
     set updatetime=4000
 
-python << endpython
-
-import vim
-import os
-keyboard = vim.eval("g:keyboard_file")
-if os.path.isfile(keyboard):
-    os.system("echo " + vim.eval("mode()") + " > " + keyboard)
-
-endpython
+    call SendToKeyboard(mode())
 
 endfunction
 
