@@ -19,6 +19,11 @@ let g:keyboard_found = 1
 let g:plugin_enabled = 1
 let g:messaged = 1
 
+function! Enable()
+    let g:plugin_enabled = 1
+    let g:messaged = 0
+endfunction
+
 function! SwitchPort()
     if g:keyboard_file == "/dev/ttyACM0"
         let g:keyboard_file = "/dev/ttyACM1"
@@ -85,7 +90,7 @@ augroup GROUP
     autocmd CursorHold * call Reset()
 augroup end
 
-command! EnableZeKeyboard let g:plugin_enabled = 1
+command! EnableZeKeyboard call Enable()
 command! DisableZeKeyboard let g:plugin_enabled = 0
 command! ChangeKeyboardPort call SwitchPort()
 
