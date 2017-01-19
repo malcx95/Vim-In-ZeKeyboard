@@ -15,6 +15,18 @@ let g:loaded_zekeyboard = 1
 
 let g:keyboard_file = "/dev/ttyACM0"
 
+let g:keyboard_found = 1
+let g:plugin_enabled = 1
+let g:messaged = 1
+
+function! SwitchPort()
+    if g:keyboard_file == "/dev/ttyACM0"
+        let g:keyboard_file = "/dev/ttyACM1"
+    else
+        let g:keyboard_file = "/dev/tty/ACM0"
+    endif
+endfunction
+
 function! SendToKeyboard(text)
 python << endpython
 
@@ -24,10 +36,12 @@ keyboard = vim.eval("g:keyboard_file")
 text = vim.eval("a:text")
 
 try:
-    with open(keyboard, 'w') as k:
-        k.write(text)
+    if int(vim.eval("g:keyboard_found")) and int(vim.eval("g:plugin_enabled")):
+        with open(keyboard, 'w') as k:
+            k.write(text)
 except IOError, OSError:
-    pass
+    vim.command("let g:keyboard_found = 0")
+    vim.command("let g:messaged = 0")
 
 endpython
 
@@ -52,6 +66,11 @@ function! Reset()
 
     call SendToKeyboard(mode())
 
+    if !g:keyboard_found && g:plugin_enabled && !g:messaged
+        echom 'ZeKeyboard not found. Use ChangeKeyboardPort to change port or EnableZeKeyboard to restart'
+        let g:messaged = 1
+    endif
+
 endfunction
 
 vnoremap <silent> <expr> <SID>VisualEntered VisualEntered()
@@ -65,6 +84,10 @@ augroup GROUP
     autocmd InsertLeave * call Reset()
     autocmd CursorHold * call Reset()
 augroup end
+
+command! EnableZeKeyboard let g:loaded_zekeyboard = 1
+command! DisableZeKeyboard let g:loaded_zekeyboard = 0
+command! ChangeKeyboardPort call SwitchPort()
 
 let &cpo = s:saved_cpo
 unlet! s:saved_cpo
