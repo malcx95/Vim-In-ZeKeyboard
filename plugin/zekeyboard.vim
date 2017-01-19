@@ -85,8 +85,8 @@ augroup GROUP
     autocmd CursorHold * call Reset()
 augroup end
 
-command! EnableZeKeyboard let g:loaded_zekeyboard = 1
-command! DisableZeKeyboard let g:loaded_zekeyboard = 0
+command! EnableZeKeyboard let g:plugin_enabled = 1
+command! DisableZeKeyboard let g:plugin_enabled = 0
 command! ChangeKeyboardPort call SwitchPort()
 
 let &cpo = s:saved_cpo
