@@ -21,6 +21,7 @@ let g:messaged = 1
 
 function! Enable()
     let g:plugin_enabled = 1
+    let g:keyboard_found = 1
     let g:messaged = 0
 endfunction
 
