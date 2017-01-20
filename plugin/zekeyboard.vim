@@ -4,7 +4,7 @@ if exists("g:loaded_zekeyboard")
     finish
 endif
 
-if !has('python')
+if !has("python")
     finish
 endif
 
@@ -18,16 +18,16 @@ let g:keyboard_file = "/dev/ttyACM0"
 let g:keyboard_found = 1
 
 " If this variable already exists, it was probably defined in .vimrc
-if !exists("g:plugin_enabled")
-    let g:plugin_enabled = 1
+if !exists("g:zekeyboard_enabled")
+    let g:zekeyboard_enabled = 1
 endif
 
-let g:messaged = 1
+let s:messaged = 1
 
 function! Enable()
-    let g:plugin_enabled = 1
+    let g:zekeyboard_enabled = 1
     let g:keyboard_found = 1
-    let g:messaged = 0
+    let s:messaged = 0
 endfunction
 
 function! SwitchPort()
@@ -47,12 +47,12 @@ keyboard = vim.eval("g:keyboard_file")
 text = vim.eval("a:text")
 
 try:
-    if int(vim.eval("g:keyboard_found")) and int(vim.eval("g:plugin_enabled")):
+    if int(vim.eval("g:keyboard_found")) and int(vim.eval("g:zekeyboard_enabled")):
         with open(keyboard, 'w') as k:
             k.write(text)
 except IOError, OSError:
     vim.command("let g:keyboard_found = 0")
-    vim.command("let g:messaged = 0")
+    vim.command("let s:messaged = 0")
 
 endpython
 
@@ -77,9 +77,9 @@ function! Reset()
 
     call SendToKeyboard(mode())
 
-    if !g:keyboard_found && g:plugin_enabled && !g:messaged
+    if !g:keyboard_found && g:zekeyboard_enabled && !s:messaged
         echom 'ZeKeyboard not found. Use ChangeKeyboardPort to change port or EnableZeKeyboard to restart'
-        let g:messaged = 1
+        let s:messaged = 1
     endif
 
 endfunction
@@ -97,7 +97,7 @@ augroup GROUP
 augroup end
 
 command! EnableZeKeyboard call Enable()
-command! DisableZeKeyboard let g:plugin_enabled = 0
+command! DisableZeKeyboard let g:zekeyboard_enabled = 0
 command! ChangeKeyboardPort call SwitchPort()
 
 let &cpo = s:saved_cpo
