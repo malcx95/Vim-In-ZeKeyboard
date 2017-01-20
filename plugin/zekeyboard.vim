@@ -16,7 +16,12 @@ let g:loaded_zekeyboard = 1
 let g:keyboard_file = "/dev/ttyACM0"
 
 let g:keyboard_found = 1
-let g:plugin_enabled = 1
+
+" If this variable already exists, it was probably defined in .vimrc
+if !exists("g:plugin_enabled")
+    let g:plugin_enabled = 1
+endif
+
 let g:messaged = 1
 
 function! Enable()
